@@ -1,0 +1,22 @@
+package mybatisEx.jdbc;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
+public class MySQLJdbcUtil {
+	public static Connection getConnection() throws SQLException {
+		Connection conn = null;
+		try (InputStream is = ClassLoader.getSystemResourceAsStream("db.properties")) {
+			Properties properties = new Properties();
+			properties.load(is);
+			conn = DriverManager.getConnection(properties.getProperty("url"), properties);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		return conn;
+	}
+}

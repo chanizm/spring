@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yi.mapper.BoardMapper">
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							guest_name like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'C'.toString()">
+							password like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'W'.toString()">
+							message like CONCAT('%', #{keyword}, '%')
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="getList" resultType="com.yi.domain.BoardVO">
+	<![CDATA[
+		select * from guestbook_message  
+		]]>
+	</select>
+
+	<insert id="insert">
+		insert into guestbook_message (guest_name,password,message)
+		values (
+		#{guest_name}, #{password}, #{message})
+	</insert>
+	
+	<select id="read" resultType="com.yi.domain.BoardVO">
+		select * from guestbook_message where message_id =#{message_id}
+	</select>
+	
+	<delete id="delete">
+		delete from guestbook_message where message_id =#{message_id}
+	</delete>
+	
+	<update id="update">
+		update guestbook_message
+		set guest_name=#{guest_name},
+			password=#{password},
+			message=#{message}
+			where message_id = #{message_id}
+	</update>
+	
+	<select id="getListWithPaging" resultType="com.yi.domain.BoardVO">
+	<![CDATA[
+	SELECT *
+	from guestbook_message
+	where 
+	]]>
+		<include refid="criteria"></include>
+	<![CDATA[
+	
+	message_id >0
+	ORDER BY message_id 
+	LIMIT #{startPage}, #{recordsPerPage}
+	]]>
+	</select>
+
+
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from guestbook_message where 
+		<include refid="criteria"></include>
+		message_id > 0	
+	</select>
+
+	
+	
+	
+</mapper>	
+	
+	

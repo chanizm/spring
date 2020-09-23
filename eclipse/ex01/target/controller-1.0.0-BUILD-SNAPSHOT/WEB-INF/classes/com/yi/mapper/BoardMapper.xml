@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yi.mapper.BoardMapper">
+	
+	<select id="getList" resultType="com.yi.domain.BoardVO">
+	<![CDATA[
+		select * from guestbook_message  
+		]]>
+	</select>
+
+	<insert id="insert">
+		insert into guestbook_message (guest_name,password,message)
+		values (
+		#{guest_name}, #{password}, #{message})
+	</insert>
+	
+	<select id="read" resultType="com.yi.domain.BoardVO">
+		select * from guestbook_message where guest_name =#{guest_name}
+	</select>
+	
+	<delete id="delete">
+		delete from guestbook_message where message_id =#{message_id}
+	</delete>
+	
+	<update id="update">
+		update guestbook_message
+		set guest_name=#{guest_name},
+			password=#{password},
+			message=#{message}
+			where message_id = #{message_id}
+	</update>
+	
+	<select id="getListWithPaging"
+	resultType="com.yi.domain.BoardVO">
+	SELECT *
+	from guestbook_message
+	where message_id >0
+	ORDER BY message_id
+	LIMIT #{pageStart}, #{perPageNum}
+	
+	</select>
+	<select id="getTotalcount"	resultType="com.yi.domain.BoardVO">
+	SELECT count(*)
+	from guestbook_message
+	
+	</select>
+	
+	
+	
+	
+</mapper>	
+	
+	
